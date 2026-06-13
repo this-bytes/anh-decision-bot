@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   anh-decision-bot:
     build:
@@ -8,12 +10,13 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TZ:-Australia/Sydney}
-      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-      - PG_HOST=${PG_HOST:-10.87.1.14}
-      - PG_PORT=${PG_PORT:-5432}
-      - PG_DB=${PG_DB:-anh_decisions}
-      - PG_USER=${PG_USER:-postgres}
-      - PG_PASS=${PG_PASS}
+      - DECISION_BOT_TOKEN=${DE_TOKEN}
+      - DECISION_BOT_ALLOWED_USER_ID=${DECISION_BOT_ALLOWED_USER_ID}
+      - DECISION_PG_HOST=${DECISION_PG_HOST:-10.87.1.14}
+      - DECISION_PG_PORT=${DECISION_PG_PORT:-5432}
+      - DECISION_PG_DATABASE=${DECISION_PG_DATABASE:-anh_decisions}
+      - DECISION_PG_USER=${DECISION_PG_USER:-postgres}
+      - DECISION_PG_PASS=${DECISION_PG_PASS}
     volumes:
       - ./bot.py:/app/bot.py:ro
     networks:
@@ -28,11 +31,11 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TZ:-Australia/Sydney}
-      - PG_HOST=${PG_HOST:-10.87.1.14}
-      - PG_PORT=${PG_PORT:-5432}
-      - PG_USER=${PG_USER:-postgres}
-      - PG_PASSWORD=${PG_PASS}
-      - PG_DATABASE=${PG_DB:-anh_decisions}
+      - DECISION_PG_HOST=${DECISION_PG_HOST:-10.87.1.14}
+      - DECISION_PG_PORT=${DECISION_PG_PORT:-5432}
+      - DECISION_PG_DATABASE=${DECISION_PG_DATABASE:-anh_decisions}
+      - DECISION_PG_USER=${DECISION_PG_USER:-postgres}
+      - DECISION_PG_PASS=${DECISION_PG_PASS}
     ports:
       - "8000:8000"
     networks:

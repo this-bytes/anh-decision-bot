@@ -554,11 +554,21 @@ class DecisionBot(discord.Client):
         await self.tree.sync()
 
 
+
+def _check_auth(interaction: discord.Interaction) -> bool:
+    """Return True if the user is authorized. Reply with ephemeral 'Not authorized' if not."""
+    allowed = os.environ.get("DECISION_BOT_ALLOWED_USER_ID", "")
+    if not allowed:
+        return True  # No restriction configured — allow all
+    if str(interaction.user.id) != allowed:
+        return False
+    return True
+
 async def run_bot():
     load_dotenv()
-    token = os.getenv("DISCORD_BOT_TOKEN")
+    token = os.getenv("DECISION_BOT_TOKEN")
     if not token:
-        log.error("DISCORD_BOT_TOKEN not set")
+        log.error("DECISION_BOT_TOKEN not set")
         sys.exit(1)
 
     bot = DecisionBot()
@@ -568,6 +578,9 @@ async def run_bot():
     @bot.tree.command(name="decisions", description="Open decisions (ephemeral)")
     async def cmd_decisions(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
+        if not _check_auth(interaction):
+            await interaction.followup.send("Not authorized.", ephemeral=True)
+            return
         rows = fetch_open_decisions(limit=20)
         if not rows:
             embed = discord.Embed(
@@ -590,6 +603,9 @@ async def run_bot():
     @bot.tree.command(name="blockers", description="Open blockers (ephemeral)")
     async def cmd_blockers(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
+        if not _check_auth(interaction):
+            await interaction.followup.send("Not authorized.", ephemeral=True)
+            return
         rows = fetch_open_blockers(limit=20)
         if not rows:
             embed = discord.Embed(title="No open blockers", color=0xFF4500)
@@ -606,6 +622,9 @@ async def run_bot():
     @bot.tree.command(name="cabs", description="Open CABs (ephemeral)")
     async def cmd_cabs(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
+        if not _check_auth(interaction):
+            await interaction.followup.send("Not authorized.", ephemeral=True)
+            return
         rows = fetch_open_cabs(limit=20)
         if not rows:
             embed = discord.Embed(title="No open CABs", color=0x9B59B6)
