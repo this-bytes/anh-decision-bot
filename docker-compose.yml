@@ -1,19 +1,44 @@
-version: "3.8"
 services:
   anh-decision-bot:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    image: anh-decision-bot:latest
+    container_name: anh-decision-bot
     restart: unless-stopped
-    env_file:
-      - ${ANNEX_CONFIG}/anh-decision-bot.env
     environment:
-      PYTHONPATH: /mnt/nas-venv/lib/python3.11/site-packages
-    labels:
-      - "com.anh.owner=dinesh"
-      - "com.anh.service=anh-decision-bot"
-      - "com.anh phase=2a"
+      - TZ=${TZ:-Australia/Sydney}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - PG_HOST=${PG_HOST:-10.87.1.14}
+      - PG_PORT=${PG_PORT:-5432}
+      - PG_DB=${PG_DB:-anh_decisions}
+      - PG_USER=${PG_USER:-postgres}
+      - PG_PASS=${PG_PASS}
+    volumes:
+      - ./bot.py:/app/bot.py:ro
     networks:
-      - anh_internal
+      - homelab-backend
+
+  anh-decision-api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    image: anh-decision-api:latest
+    container_name: anh-decision-api
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Australia/Sydney}
+      - PG_HOST=${PG_HOST:-10.87.1.14}
+      - PG_PORT=${PG_PORT:-5432}
+      - PG_USER=${PG_USER:-postgres}
+      - PG_PASSWORD=${PG_PASS}
+      - PG_DATABASE=${PG_DB:-anh_decisions}
+    ports:
+      - "8000:8000"
+    networks:
+      - homelab-backend
+
 networks:
-  anh_internal:
+  homelab-backend:
     external: true
-    name: anh_internal
+    name: homelab-backend
