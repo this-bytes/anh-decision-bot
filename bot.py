@@ -15,9 +15,6 @@ import discord
 from discord import app_commands
 from dotenv import load_dotenv
 
-# psycopg2 installed in venv at /mnt/nas/software/code/anh/.venv
-sys.path.insert(0, "/mnt/nas/software/code/anh/.venv/lib/python3.11/site-packages")
-
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -70,11 +67,11 @@ MOCK_CABS = [
 
 # ── Database ──────────────────────────────────────────────────────────────────
 
-PG_HOST = os.getenv("PG_HOST", "10.87.1.14")
-PG_PORT = os.getenv("PG_PORT", "5432")
-PG_DB   = os.getenv("PG_DB",   "anh_decisions")
-PG_USER = os.getenv("PG_USER", "postgres")
-PG_PASS = os.getenv("PG_PASS", "")
+PG_HOST = os.getenv("DECISION_PG_HOST", "10.87.1.14")
+PG_PORT = os.getenv("DECISION_PG_PORT", "5432")
+PG_DB   = os.getenv("DECISION_PG_DATABASE", "anh_decisions")
+PG_USER = os.getenv("DECISION_PG_USER", "postgres")
+PG_PASS = os.getenv("DECISION_PG_PASS", "")
 
 AUDIT_LOG_CHANNEL_ID = int(os.getenv("AUDIT_LOG_CHANNEL_ID", "0"))
 
