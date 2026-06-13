@@ -1,23 +1,19 @@
+version: "3.8"
 services:
   anh-decision-bot:
-    image: "python:3.12-slim"
-    container_name: anh-decision-bot
+    build: .
     restart: unless-stopped
+    env_file:
+      - ${ANNEX_CONFIG}/anh-decision-bot.env
     environment:
-      - TZ=${TZ:-Australia/Sydney}
-      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-      - PG_HOST=${PG_HOST}
-      - PG_PORT=${PG_PORT:-5432}
-      - PG_DB=${PG_DB:-anh_decisions}
-      - PG_USER=${PG_USER:-postgres}
-      - PG_PASS=${PG_PASS}
-    volumes:
-      - ./bot.py:/app/bot.py:ro
-    entrypoint: ["python", "/app/bot.py"]
+      PYTHONPATH: /mnt/nas-venv/lib/python3.11/site-packages
+    labels:
+      - "com.anh.owner=dinesh"
+      - "com.anh.service=anh-decision-bot"
+      - "com.anh phase=2a"
     networks:
-      - homelab-backend
-
+      - anh_internal
 networks:
-  homelab-backend:
+  anh_internal:
     external: true
-    name: homelab-backend
+    name: anh_internal
