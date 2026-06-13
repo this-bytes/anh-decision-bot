@@ -1,0 +1,23 @@
+services:
+  anh-decision-bot:
+    image: "python:3.12-slim"
+    container_name: anh-decision-bot
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Australia/Sydney}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - PG_HOST=${PG_HOST}
+      - PG_PORT=${PG_PORT:-5432}
+      - PG_DB=${PG_DB:-anh_decisions}
+      - PG_USER=${PG_USER:-postgres}
+      - PG_PASS=${PG_PASS}
+    volumes:
+      - ./bot.py:/app/bot.py:ro
+    entrypoint: ["python", "/app/bot.py"]
+    networks:
+      - homelab-backend
+
+networks:
+  homelab-backend:
+    external: true
+    name: homelab-backend
