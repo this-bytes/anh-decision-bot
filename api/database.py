@@ -9,11 +9,11 @@ async def init_pool() -> asyncpg.Pool:
     global pool
     if pool is None:
         pool = asyncpg.pool(
-            host=os.environ["DECISION_PG_HOST"],
-            port=int(os.environ.get("DECISION_PG_PORT", "5432")),
-            user=os.environ["DECISION_PG_USER"],
-            password=os.environ["DECISION_PG_PASS"],
-            database=os.environ["DECISION_PG_DATABASE"],
+            host=os.getenv("DECISION_PG_HOST", "10.87.1.14"),
+            port=int(os.getenv("DECISION_PG_PORT", "5432")),
+            user=os.getenv("DECISION_PG_USER", "postgres"),
+            password=os.getenv("DECISION_PG_PASS", ""),
+            database=os.getenv("DECISION_PG_DATABASE", "anh_decisions"),
             min_size=2,
             max_size=10,
         )

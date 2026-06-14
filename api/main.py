@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.database import init_pool, close_pool
-from app.routers import decisions, cabs, alert_silences, audit_log
+from database import init_pool, close_pool
+from routers import decisions, cabs, alert_silences, audit_log
 
 
 @asynccontextmanager
